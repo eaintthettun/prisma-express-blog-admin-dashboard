@@ -2,3 +2,10 @@
 
 /* to use flowbite components */
 @import "flowbite";
+
+.logo-color-fill {
+  background: rgb(56, 102, 92);
+  color: white;
+  border-radius: 8px;
+  padding: 2px 5px;
+}

@@ -13,3 +13,191 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Session {
+  sid     String   @id // session ID
+  data    Json
+  expires DateTime
+}
+
+model User {
+  id                Int     @id @default(autoincrement())
+  firstName         String?
+  lastName          String?
+  name              String
+  profilePictureUrl String? // Optional profile picture URL
+  email             String  @unique
+  password          String
+  city              String?
+  country           String?
+  jobPosition       String?
+  company           String?
+  bio               String? // New: About Alex Chen
+  githubUrl         String? // New: Social links
+  twitterUrl        String? // New: Social links
+  linkedinUrl       String? // New: Social links
+
+  posts              Post[] //user can write many posts
+  comments           Comment[] //user write many comments
+  likes              Like[] //Likes given by this user //join table
+  commentLikes       CommentLike[]
+  followedTopics     TopicFollow[] //join table
+  followedCategories CategoryFollow[] //join table
+
+  //follows relation(many-many relationship join table)
+  followers UserFollow[] @relation("FollowerFollowing")
+  following UserFollow[] @relation("FollowingFollower")
+
+  bookmarks BookMark[] //user can save many posts
+}
+
+//m-m relationship between user and post
+//explicit join table
+model BookMark {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+
+  @@unique([userId, postId])
+}
+
+//m-m relationship with self-referencing
+//join table
+model UserFollow {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  // Relations: Connecting back to the User model
+  //follower follows following
+  follower    User     @relation("FollowingFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId  Int
+  following   User     @relation("FollowerFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId Int
+
+  @@unique([followerId, followingId])
+}
+
+model Post {
+  id         Int        @id @default(autoincrement())
+  title      String
+  subtitle   String?
+  imageUrl   String?
+  content    String
+  readTime   String?
+  featured   Boolean    @default(false)
+  viewCount  Int        @default(0)
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   Int
+  createdAt  DateTime   @default(now())
+  category   Category?  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int?
+  topic      Topic?     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId    Int? //to prevent conflicts with old records that don't have topics
+  comments   Comment[]
+  likes      Like[] // Likes received by this post
+  bookmarks  BookMark[] //post have many bookmarks
+}
+
+model CommentLike {
+  id        Int     @id @default(autoincrement())
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade) //which user like this comment
+  authorId  Int
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade) //which comment is liked
+  commentId Int
+
+  @@unique([authorId, commentId]) // Prevent double-likes
+}
+
+//post like table
+//m-m rs between author and post
+//join table
+model Like {
+  id       Int  @id @default(autoincrement())
+  author   User @relation(fields: [authorId], references: [id], onDelete: Cascade) //who like this
+  authorId Int
+  post     Post @relation(fields: [postId], references: [id], onDelete: Cascade) //under which post
+  postId   Int
+
+  @@unique([authorId, postId]) // Prevent duplicate likes
+}
+
+model Category {
+  id         Int              @id @default(autoincrement())
+  name       String           @unique
+  slug       String? //to prevent confict with old records that does not have slug
+  posts      Post[]
+  topics     Topic[] //one category has many topics
+  followedBy CategoryFollow[] //join table
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime?        @updatedAt
+}
+
+//join table between Category and User(m-m rs)
+model CategoryFollow {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  categoryId Int
+  followedAt DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId]) // Prevent duplicate follows
+}
+
+//a topic can have only one category
+model Topic {
+  id         Int           @id @default(autoincrement())
+  name       String        @unique
+  slug       String
+  category   Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  posts      Post[]
+  followedBy TopicFollow[] //join table
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@unique([name, categoryId]) // Prevents duplicate topic names within same category
+}
+
+//join table between Topic and User(m-m rs)
+model TopicFollow {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId   Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, topicId]) // prevent duplicate follows
+}
+
+model Comment {
+  id           Int           @id @default(autoincrement())
+  content      String
+  post         Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       Int
+  author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId     Int
+  createdAt    DateTime      @default(now())
+  commentLikes CommentLike[]
+
+  //for reply under comment //self referencing relationship one to many
+  parentId Int?      @map("parent_id")
+  parent   Comment?  @relation("CommentChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children Comment[] @relation("CommentChildren") // This defines the relation for nested comments
+}
+
+//npx prisma init
+//npx prisma generate (read database url in .env file)
+//npx prisma db push (add database to mongo db cluster)
+//npx prisma studio
+// npx prisma migrate dev --name init
+
+//to add new column in database
+// npx prisma migrate dev --name add_user_photo
+// npx prisma generate
+//npx prisma db push

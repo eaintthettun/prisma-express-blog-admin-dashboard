@@ -1,69 +1,111 @@
-# React + TypeScript + Vite
+# 🛠 Prisma Express Blog - Admin Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An **Admin Dashboard** for managing a Prisma + Express Blog project.  
+This dashboard is built with **React**, **Tailwind CSS**, and **Flowbite** for the UI,  
+and uses **PostgreSQL**,**Prisma ORM** with **Express.js** for the backend.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 Features
 
-## Expanding the ESLint configuration
+- **User Management** – View and manage registered users.
+- **Post Management** – Approve, edit, or delete blog posts.
+- **Topic & Category Management** – Create, update, and delete blog topics.
+- **Responsive UI** – Fully responsive design with Tailwind CSS + Flowbite.
+- **Routing** – Client-side routing with React Router.
+- **API Integration** – The React admin dashboard communicates with the Express backend via REST API calls. The backend uses Prisma ORM to handle database queries and updates.
+- **Secure Database Access** – Managed through Prisma ORM.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠 Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Frontend
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **React 19** – UI library
+- **Tailwind CSS 4** – Styling
+- **Flowbite & Flowbite-React** – Prebuilt components
+- **React Router v7** – Routing
+- **React Icons** – Icon set
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Backend
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Express 5** – Server-side framework
+- **Prisma ORM 6** – Database queries and migrations
+- **PostgreSQL** – Database (can be swapped with MySQL/SQLite)
+- **CORS** – API security
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Build Tools
+
+- **Vite 7** – Fast development server and bundler
+- **TypeScript** – Type safety
+- **ESLint** – Code linting
+
+---
+
+## 📂 Project Structure
+
+project/
+│── backend/ # Express + Prisma API
+│ ├── prisma/ # Prisma schema and migrations
+│ ├── routes/ # API route definitions
+│ ├── controllers/ # Controller logic
+│ └── index.js # Entry point
+│
+│ ├── src/
+│ │ ├── components/ # Reusable UI components
+│ │ ├── pages/ # Dashboard pages
+│ │ └── main.tsx # React entry point
+│ │ └── App.tsx # where routes are written
+│ └── index.html
+│
+└── package.json # both frontend & backend dependencies
+└── README.md
+
+---
+
+## 🚀 Installation
+
+### 1️⃣ Clone the repository
+
+git clone https://github.com/your-username/prisma-express-blog-admin.git
+cd prisma-express-blog-admin
+
+### 2️⃣ Install dependencies
+
+npm install
+
+### 3️⃣ Setup environment variables
+
+Create a `.env` file in `backend/`:
+
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/blogdb"
+SECRET=your_secret_key
+PORT=5000
+
+### 4️⃣ Run Prisma migrations
+
+cd backend
+npx prisma init
+npx prisma generate
+npx prisma db push
+
+### 5️⃣ Start the development servers
+
+npm run server (for backend)
+
+npm run dev (for frontend)
+
+---
+
+## 🖼 Screenshots
+
+_(Add screenshots of your dashboard here)_
+
+---
+
+## 👨‍💻 Author
+
+- **Eaint Thet Tun** – [GitHub](https://github.com/eaintthettun/prisma-express-blog-admin-dashboard.git)
+
+---

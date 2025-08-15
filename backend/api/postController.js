@@ -145,123 +145,42 @@ export const bookMarkPost=async(req,res)=>{
 }
 
 export const showPostDetails=async(req,res)=>{
-    const categories=res.locals.categories; //get categories from session
-    const currentUser=res.locals.currentUser;
     const postId=parseInt(req.params.id);
     
     const post=await prisma.post.findUnique({
         where:{id:postId},
         include:{
-            likes:{
-                select:{
-                    authorId:true
-                }
-            },// includes list of users who liked this post
-            author:{
-                include:{
-                    followers:{
-                        select:{
-                            followerId:true,
-                        }
-                    }
-                }
-            },
-            comments: {
-                where:{parentId:null},
-                include: {
-                  children:{ //children= child comment(reply)
-                    include:{
-                        author:{
-                            select:{
-                                profilePictureUrl:true,
-                                name:true
-                            }
-                        },
-                        commentLikes:{
-                            select:{
-                                authorId:true
-                            }
-                        },
-                    }
-                  },
-                  commentLikes:{
-                    select:{
-                        authorId:true
-                    }
-                  },
-                  author: {
-                    select:{
-                        name:true,
-                        profilePictureUrl:true,
-                    }
-                  }
-                },
-                orderBy: {
-                  createdAt: 'asc'
-                }
-            },
-            category:{
-                select:{
-                    name:true,
-                }
-            },
-            bookmarks:{
-                select:{
-                    userId:true,
-                    postId:true
-                }
-            },
             _count:{
                 select:{
                     likes:true,
                     comments:true
                 }
-            }
-        }
-        });
-
-    const postWithLikeInfo = {
-        ...post,
-        likedByUser: res.locals.currentUser 
-            ? post.likes.some(like => like.authorId === req.session.userId)
-            : false,
-    };
-
-    const recentPosts = await prisma.post.findMany({
-            orderBy: {
-              createdAt: 'desc' // sort by newest first
             },
-            take: 5 // limit to 5 posts
-    });
-    //everytime user reads post,increase view count
-    await prisma.post.update({
-        where: { id: postId },
-        data: {
-          viewCount: {
-            increment: 1 // 👈 +1 each time post is viewed
-          }
-        }
-    });
-    const mostReadPosts = await prisma.post.findMany({
-        orderBy: {
-          viewCount: 'desc' //large to small
-        },
-        take: 5,
-        include:{
+            category:true,
+            bookmarks:true,
+            likes:true,
+            comments:true,
             author:{
-                select:{
-                    name:true,
-                }
-            }
-        }
+                include:{followers:true}
+            },
+            comments: {
+                where:{parentId:null},
+                orderBy: {createdAt: 'desc'},
+                include: {
+                  children:{ //children= child comment(reply)
+                    include:{
+                        author:true,
+                        commentLikes:true,
+                    }
+                  },
+                  commentLikes:true,
+                  author: true,
+                },
+            },
+        },
     });
-    //console.log('post details',post);
-    res.render('posts/postDetails',
-        {post:postWithLikeInfo,currentUser,recentPosts,mostReadPosts,
-            formatViewCount,
-            categories,
-            getReadTime:res.locals.getReadTime
-        });
+    
+    res.json({post});
 }
 
 // Like/Unlike routes

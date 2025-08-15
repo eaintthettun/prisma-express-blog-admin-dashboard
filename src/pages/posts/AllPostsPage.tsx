@@ -17,7 +17,6 @@ export default function AllPostsPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    console.log("hello use effect");
     const fetchPosts = async () => {
       try {
         const res = await fetch(
@@ -79,10 +78,12 @@ export default function AllPostsPage() {
                   {post.id}
                 </TableCell>
                 <TableCell className="text-center text-slate-800">
-                  {post.title}
+                  <Link to={`/posts/${post.id}`} className="hover:underline">
+                    {post.title}
+                  </Link>
                 </TableCell>
                 <TableCell className="text-center text-slate-800">
-                  {post.User.name}
+                  {post.author.name}
                 </TableCell>
                 <TableCell className="text-center text-slate-800">
                   {post.category.name}
@@ -91,24 +92,30 @@ export default function AllPostsPage() {
                   {post.viewCount}
                 </TableCell>
                 <TableCell className="text-center text-slate-800">
-                  {post.featured}
+                  {post.featured ? (
+                    <span className="text-green-600 italic px-2 py-1">
+                      featured
+                    </span>
+                  ) : (
+                    "-"
+                  )}
                 </TableCell>
-                <TableCell className="flex justify-center gap-3">
+                <TableCell>
                   <Link
-                    to="/staff/view/:id"
-                    className="px-4 py-2 text-amber-600 font-semibold"
+                    to={"/posts/" + post.id}
+                    className="px-4 text-slate-600 font-semibold"
                   >
                     View
                   </Link>
                   <Link
-                    to="/staff/edit/:id"
-                    className="px-4 py-2 text-amber-600 font-semibold"
+                    to={"posts/edit" + post.id}
+                    className="px-4 text-amber-600 font-semibold"
                   >
                     Edit
                   </Link>
                   <Link
-                    to="/staff/delete/:id"
-                    className="px-4 py-2 text-amber-600 font-semibold"
+                    to={"posts/delete" + post.id}
+                    className="px-1 bg-red-500 text-white font-semibold py-1 rounded"
                   >
                     Delete
                   </Link>

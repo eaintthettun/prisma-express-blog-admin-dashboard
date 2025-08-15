@@ -9,15 +9,15 @@ export type Post = {
   viewCount: number;
   createdAt: Date;
 
-  comments: Comment[];
   likes: PostLike[];
+  comments: Comment[];
   bookmarks: BookMark[];
-  User: User;
+  author: Author;
   topic: Topic;
   category: Category;
 };
 
-export type User = {
+export type Author = {
   id: number;
   firstName: string;
   lastName: string;
@@ -34,31 +34,31 @@ export type User = {
   twitterUrl: string;
   linkedinUrl: string;
 
-  posts: Post[]; //user can write many posts
-  comments: Comment[]; //user can write many comments
-  postLikes: PostLike[]; //Post Likes given by this user //join table
+  posts: Post[]; //Author can write many posts
+  comments: Comment[]; //Author can write many comments
+  postLikes: PostLike[]; //Post Likes given by this Author //join table
   commentLikes: CommentLike[];
   followedTopics: TopicFollow[]; //join table
   followedCategories: CategoryFollow[]; //join table
 
   //follows relation(many-many relationship join table)
-  followers: UserFollow[];
-  following: UserFollow[];
+  followers: AuthorFollow[];
+  following: AuthorFollow[];
 
-  bookmarks: BookMark[]; //user can save many posts
+  bookmarks: BookMark[]; //Author can save many posts
 };
 
-//join table between user and user
-export type UserFollow = {
+//join table between Author and Author
+export type AuthorFollow = {
   id: number;
   createdAt: Date;
 
-  // Foreign keys (optional if you always fetch full User)
+  // Foreign keys (optional if you always fetch full Author)
   followerId: number;
   followingId: number;
 
-  follower: User; //follower follows following
-  following: User;
+  follower: Author; //follower follows following
+  following: Author;
 };
 
 export type Category = {
@@ -89,7 +89,7 @@ export type Comment = {
   id: number;
   content: string;
   post: Post;
-  User: User;
+  Author: Author;
   createdAt: Date;
   commentLikes: CommentLike[];
 
@@ -101,41 +101,41 @@ export type Comment = {
 };
 
 //join table
-//m-m rs between User and post
+//m-m rs between Author and post
 export type PostLike = {
   id: number;
-  User: User;
+  Author: Author;
   post: Post;
 };
 
-//m-m relationship between user and post
+//m-m relationship between Author and post
 //explicit join table
 export type BookMark = {
   id: number;
   createdAt: Date;
-  User: User;
+  Author: Author;
   post: Post;
 };
 
-//join table between User and comment
+//join table between Author and comment
 export type CommentLike = {
   id: number;
-  User: User;
+  Author: Author;
   comment: Comment;
 };
 
-//join table between Topic and User(m-m rs)
+//join table between Topic and Author(m-m rs)
 export type TopicFollow = {
   id: number;
-  User: User;
+  Author: Author;
   topic: Topic;
   createdAt: Date;
 };
 
-//join table between Category and User(m-m rs)
+//join table between Category and Author(m-m rs)
 export type CategoryFollow = {
   id: number;
-  User: User;
+  Author: Author;
   category: Category;
   followedAt: Date;
 };

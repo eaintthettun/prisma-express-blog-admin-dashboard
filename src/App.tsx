@@ -10,6 +10,7 @@ import AllPostsPage from "./pages/posts/AllPostsPage";
 import FeaturedPostsPage from "./pages/posts/FeaturedPostsPage";
 import CategoriesPage from "./pages/categories/CategoriesPage";
 import TopicsPage from "./pages/categories/TopicsPage";
+import PostDetailsPage from "./pages/posts/PostDetailsPage";
 
 export default function App() {
   return (
@@ -31,7 +32,8 @@ export default function App() {
         <Route path="/topics" element={<TopicsPage />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        {/* Add more dashboard pages here */}
+
+        <Route path="/posts/:id" element={<PostDetailsPage />} />
       </Route>
     </Routes>
   );

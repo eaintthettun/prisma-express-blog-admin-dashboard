@@ -1,39 +1,23 @@
 import { Routes, Route } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
-import StaffPage from "./pages/posts/AllPostsPage";
-import SignInPage from "./pages/auth/SignInPage";
-import SignUpPage from "./pages/auth/SignUpPage";
-import AuthLayout from "./layouts/AuthLayout";
 import HomePage from "./pages/HomePage";
-import UsersPage from "./pages/users/UsersPage";
-import AllPostsPage from "./pages/posts/AllPostsPage";
-import FeaturedPostsPage from "./pages/posts/FeaturedPostsPage";
-import CategoriesPage from "./pages/categories/CategoriesPage";
-import TopicsPage from "./pages/categories/TopicsPage";
-import PostDetailsPage from "./pages/posts/PostDetailsPage";
+import AllPostsPage from "./pages/AllPostsPage";
+import UsersPage from "./pages/UsersPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import InboxPage from "./pages/InboxPage";
+import SettingsPage from "./pages/SettingsPage";
 
 export default function App() {
   return (
     <Routes>
-      {/* Auth pages */}
-      <Route element={<AuthLayout />}>
-        <Route path="/signin" element={<SignInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-      </Route>
-
-      {/* Dashboard pages */}
       <Route element={<DashboardLayout />}>
+        {/* The HomePage component is now correctly nested inside a new Route */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/staff" element={<StaffPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/posts" element={<AllPostsPage />} />
-        <Route path="/posts/featured" element={<FeaturedPostsPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/topics" element={<TopicsPage />} />
-        <Route path="/signin" element={<SignInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-
-        <Route path="/posts/:id" element={<PostDetailsPage />} />
+        <Route path="/inbox" element={<InboxPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
     </Routes>
   );

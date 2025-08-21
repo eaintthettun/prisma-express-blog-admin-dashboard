@@ -156,10 +156,12 @@ export const listTopics=async(req,res)=>{
                     name:true,
                     slug:true,
                 }
-            }
+            },
+            posts:true,
+            followedBy:true
         }
     });
-    res.render('category/allTopics',{categories});
+    res.json(categories);
 }
 
 export const showTopic=async(req,res)=>{

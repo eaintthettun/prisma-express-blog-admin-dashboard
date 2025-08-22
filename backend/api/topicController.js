@@ -113,6 +113,25 @@ const getTopic=async(options = {}) => {
 });
 }
 
+export const showEditCategory=async(req,res)=>{
+  const categoryId=req.params.id;
+  const category=await getCategory({
+          where:{
+            id:categoryId
+          }
+  });
+  res.json(category);
+}
+
+export const editCategory=async(req,res)=>{
+  const {name,slug}=req.body;
+    const updatedCategory=await prisma.category.update({
+        where:{id:req.params.id}, //condition
+        data:{name,slug} //form data
+    });
+    res.json(updatedCategory);
+}
+
 //this method search either topic or category
 export const searchTopic=async(req,res)=>{
   const searchWord =req.query.searchWord.trim();

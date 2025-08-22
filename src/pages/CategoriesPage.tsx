@@ -19,12 +19,13 @@ export default function CategoriesPage() {
     fetchCategories();
   }, []);
 
-  {
-    console.log("categories are:", categories);
-  }
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">All Categories</h1>
+    <div className="container mx-auto">
+      <div>
+        <p className="text-muted-foreground text-center text-xl text-gray-700">
+          Manage your product categories and their settings.
+        </p>
+      </div>
       <DataTable columns={columns} data={categories} />
     </div>
   );

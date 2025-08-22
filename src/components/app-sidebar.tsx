@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getRandomColor } from "@/lib/utils";
-import { NavUser } from "./nav-user";
+import { NavAdmin } from "./nav-admin";
 
 // Menu items.
 const items = [
@@ -70,13 +70,13 @@ const adminProfile = {
 
 export default function AppSidebar() {
   return (
-    <Sidebar variant="inset">
+    <Sidebar variant="inset" className="p-0">
       <SidebarHeader className="flex items-center justify-between p-4 border-b border-gray-200">
         <Link to="/">
           <div className="flex items-center gap-3">
             {/* Logo and Website Name */}
-            <NotepadTextIcon className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900 tracking-tight">
+            <NotepadTextIcon className="h-8 w-8 text-cyan-800" />
+            <span className="text-2xl font-mono shadow-2xl font-extrabold text-slate-800">
               MYBLOG
             </span>
           </div>
@@ -119,8 +119,8 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={adminProfile} />
+      <SidebarFooter className="px-2 py-3 bg-gray-200">
+        <NavAdmin user={adminProfile} />
       </SidebarFooter>
     </Sidebar>
   );

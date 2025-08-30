@@ -53,10 +53,10 @@ export function DataTable<TData extends { id: number }, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getRowId: (row) => row.id.toString(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -100,7 +100,7 @@ export function DataTable<TData extends { id: number }, TValue>({
 
         <div className="flex gap-2">
           {dataType === "category" && (
-            <Link to="/category/add">
+            <Link to="/categories/add">
               <Button
                 variant="outline"
                 size="sm"
@@ -112,7 +112,7 @@ export function DataTable<TData extends { id: number }, TValue>({
             </Link>
           )}
           {dataType === "admin" && (
-            <Link to="/admin/add">
+            <Link to="/admins/add">
               <Button
                 variant="outline"
                 size="sm"
@@ -123,7 +123,7 @@ export function DataTable<TData extends { id: number }, TValue>({
             </Link>
           )}
           {dataType === "post" && (
-            <Link to="/post/add">
+            <Link to="/posts/add">
               <Button
                 variant="outline"
                 size="sm"
@@ -143,7 +143,7 @@ export function DataTable<TData extends { id: number }, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="p-2">
+                    <TableHead key={header.id} className="px-5 py-2">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -166,7 +166,7 @@ export function DataTable<TData extends { id: number }, TValue>({
                   className="even:bg-gray-100"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="p-[10px]">
+                    <TableCell key={cell.id} className="px-5 py-2">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

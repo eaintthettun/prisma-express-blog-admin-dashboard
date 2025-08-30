@@ -66,6 +66,8 @@ model User {
   following UserFollow[] @relation("FollowingFollower")
 
   bookmarks BookMark[] //user can save many posts
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @updatedAt
 }
 
 //m-m relationship between user and post

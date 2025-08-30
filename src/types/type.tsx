@@ -50,6 +50,7 @@ export type Author = {
   githubUrl: string;
   twitterUrl: string;
   linkedinUrl: string;
+  createdAt: Date;
 
   posts: Post[]; //Author can write many posts
   comments: Comment[]; //Author can write many comments

@@ -7,35 +7,11 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const columns: ColumnDef<Author>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="text-white"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "id",
     // header: "ID",
@@ -86,6 +62,39 @@ export const columns: ColumnDef<Author>[] = [
         className="text-cyan-50"
       />
     ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Created at"
+        className="text-cyan-50"
+      />
+    ),
+    cell: ({ row }) => {
+      const dateString = row.original.createdAt; // Access the date string from the row data
+
+      if (!dateString) {
+        return <span>N/A</span>; // Handle cases where the date is missing
+      }
+
+      try {
+        const date = new Date(dateString);
+        // Use toLocaleString() for a readable date and time,
+        // or customize with options for specific formatting.
+        const formattedDate = date.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        return <div>{formattedDate}</div>;
+      } catch (error) {
+        console.error("Invalid date format:", error, " ", dateString);
+        return <span>Invalid Date</span>;
+      }
+    },
   },
   {
     accessorKey: "posts",

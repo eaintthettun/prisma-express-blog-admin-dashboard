@@ -53,6 +53,9 @@ app.get('/authors',async(req,res)=>{
       include:{
         posts:true,
         followers:true,
+      },
+      orderBy:{
+        createdAt:'desc'
       }
     }
   );

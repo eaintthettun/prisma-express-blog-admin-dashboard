@@ -3,7 +3,11 @@ const prisma=new PrismaClient();
 
 export const listAdmins=async(req,res)=>{
     try{
-        const admins=await prisma.admin.findMany();
+        const admins=await prisma.admin.findMany({
+            orderBy:{
+                createdAt:'desc'
+            }
+        });
         res.json(admins);
     }catch(error){
         console.error('Failed to fetch admins:',error);

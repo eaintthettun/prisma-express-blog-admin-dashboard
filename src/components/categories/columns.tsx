@@ -7,34 +7,10 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<Category>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="text-white"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "id", //must match with type category id
     // header: "ID",

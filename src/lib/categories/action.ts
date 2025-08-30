@@ -1,6 +1,7 @@
 import { Category } from "@/types/type";
 
 //carry category object to create a category
+// no need id becaus id is auto-incremented in database
 export async function createCategory(category:Omit<Category,'id'>) {
     const res=await fetch("http://localhost:5000/categories",{
         method:"POST",
@@ -9,6 +10,5 @@ export async function createCategory(category:Omit<Category,'id'>) {
         },
         body:JSON.stringify(category) //carry category in body
     });
-    const data=await res.json();
-    return data;
+    return res;
 }

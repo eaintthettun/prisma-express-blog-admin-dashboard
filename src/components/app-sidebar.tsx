@@ -18,9 +18,9 @@ import {
   Settings,
   Tag,
   Users,
+  Shield,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getRandomColor } from "@/lib/utils";
 import { NavAdmin } from "./nav-admin";
 
 // Menu items.
@@ -31,33 +31,38 @@ const items = [
     icon: LucideLayoutDashboard,
   },
   {
-    title: "Users",
-    url: "/users",
+    title: "Authors",
+    url: "/authors",
     icon: Users,
-    badge: 5,
   },
   {
     title: "Posts",
     url: "/posts",
     icon: FileText,
-    badge: 39,
   },
   {
     title: "Categories",
     url: "/categories",
     icon: Tag,
-    badge: 20,
   },
   {
     title: "Inbox",
     url: "/inbox",
     icon: Inbox,
-    badge: 15,
+    badge: 10,
   },
   {
     title: "Settings",
     url: "/settings",
     icon: Settings,
+  },
+];
+
+const adminItems = [
+  {
+    title: "Admins",
+    url: "/admins",
+    icon: Shield,
   },
 ];
 
@@ -70,56 +75,79 @@ const adminProfile = {
 
 export default function AppSidebar() {
   return (
-    <Sidebar variant="inset" className="p-0">
-      <SidebarHeader className="flex items-center justify-between p-4 border-b border-gray-200">
-        <Link to="/">
-          <div className="flex items-center gap-3">
-            {/* Logo and Website Name */}
-            <NotepadTextIcon className="h-8 w-8 text-cyan-800" />
-            <span className="text-2xl font-mono shadow-2xl font-extrabold text-slate-800">
-              MYBLOG
-            </span>
-          </div>
-        </Link>
+    <Sidebar variant="inset" className="border-r border-slate-200 bg-white ">
+      <SidebarHeader className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+        <div className="flex items-center gap-3 px-6 py-4">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white transition-colors group-hover:bg-slate-800">
+              <NotepadTextIcon className="h-5 w-5" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold text-slate-900 tracking-tight">
+                MYBLOG
+              </span>
+              <span className="text-xs text-slate-500 font-medium">
+                Content Management
+              </span>
+            </div>
+          </Link>
+        </div>
       </SidebarHeader>
-      <SidebarContent className="p-4 flex-grow overflow-y-auto">
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-sm font-semibold text-gray-500 mb-2">
-            Manage
+
+      <SidebarContent className="px-4 py-6">
+        <SidebarGroup className="mb-8">
+          <SidebarGroupLabel className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+            Content Management
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {items.map((item) => (
-                <SidebarMenuItem
-                  key={item.title}
-                  className="p-2 flex items-center"
-                >
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild className="group">
                     <a
                       href={item.url}
-                      className="flex items-center gap-3 p-2 rounded-md transition-colors hover:bg-gray-100"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-white transition-all duration-200 font-medium"
                     >
-                      <item.icon className="h-5 w-5 text-gray-500" />
-                      <span className="text-gray-700 font-medium">
-                        {item.title}
-                      </span>
+                      <item.icon className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
+                      <span>{item.title}</span>
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className="ml-auto bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                          {item.badge}
+                        </span>
+                      )}
                     </a>
                   </SidebarMenuButton>
-                  {/* Badge with random color and circular shape */}
-                  {item.badge && (
-                    <div
-                      className={`text-xs p-2 h-5 w-5 flex items-center justify-center rounded-full ${getRandomColor()}`}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+            Administration
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {adminItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild className="group">
+                    <a
+                      href={item.url}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-white transition-all duration-200 font-medium"
                     >
-                      {item.badge}
-                    </div>
-                  )}
+                      <item.icon className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="px-2 py-3 bg-gray-200">
+
+      <SidebarFooter className="border-t border-slate-200 bg-white/80 backdrop-blur-sm p-4">
         <NavAdmin user={adminProfile} />
       </SidebarFooter>
     </Sidebar>

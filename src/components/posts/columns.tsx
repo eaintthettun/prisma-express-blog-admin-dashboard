@@ -1,4 +1,4 @@
-import type { Category } from "@/types/type";
+import type { Post } from "@/types/type";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,9 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export const columns: ColumnDef<Category>[] = [
+export const columns: ColumnDef<Post>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -36,7 +37,7 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id", //must match with type category id
+    accessorKey: "id",
     // header: "ID",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -47,24 +48,78 @@ export const columns: ColumnDef<Category>[] = [
     ),
   },
   {
-    accessorKey: "name",
+    accessorKey: "title",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Name"
+        title="Title"
         className="text-cyan-50"
       />
     ),
   },
   {
-    accessorKey: "slug",
+    accessorKey: "author",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Slug"
+        title="Author"
         className="text-cyan-50"
       />
     ),
+    cell: ({ row }) => {
+      return <div>{row.original.author.name}</div>;
+    },
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Category"
+        className="text-cyan-50"
+      />
+    ),
+    cell: ({ row }) => {
+      return <div>{row.original.category.name}</div>;
+    },
+  },
+  {
+    accessorKey: "readTime",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Read time"
+        className="text-cyan-50"
+      />
+    ),
+  },
+  {
+    accessorKey: "featured",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Featured"
+        className="text-cyan-50"
+      />
+    ),
+    cell: ({ row }) => {
+      const featured = row.original.featured;
+      return <div>{featured ? "yes" : "no"}</div>;
+    },
+  },
+  {
+    accessorKey: "viewCount",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="View count"
+        className="text-cyan-50"
+      />
+    ),
+    cell: ({ row }) => {
+      const views = row.original.viewCount;
+      return <div>{views ? views : 0}</div>;
+    },
   },
   {
     accessorKey: "createdAt",
@@ -100,87 +155,45 @@ export const columns: ColumnDef<Category>[] = [
     },
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "likes",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Updated at"
+        title="Post likes"
         className="text-cyan-50"
       />
     ),
     cell: ({ row }) => {
-      const dateString = row.original.updatedAt; // Access the date string from the row data
-
-      if (!dateString) {
-        return <span>N/A</span>; // Handle cases where the date is missing
-      }
-
-      try {
-        const date = new Date(dateString);
-        // Use toLocaleString() for a readable date and time,
-        // or customize with options for specific formatting.
-        const formattedDate = date.toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
-        return <div>{formattedDate}</div>;
-      } catch (error) {
-        console.error("Invalid date format:", error, " ", dateString);
-        return <span>Invalid Date</span>;
-      }
+      const likes = row.original.likes;
+      return <div>{likes ? likes.length : 0}</div>;
     },
   },
   {
-    accessorKey: "posts",
+    accessorKey: "comments",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Posts"
+        title="Comments"
         className="text-cyan-50"
       />
     ),
     cell: ({ row }) => {
-      // Access the posts array from the row data
-      const posts = row.original.posts;
-
-      // Return the length of the posts array
-      return <div>{posts ? posts.length : 0}</div>;
+      const comments = row.original.comments;
+      return <div>{comments ? comments.length : 0}</div>;
     },
   },
   {
-    accessorKey: "topics",
+    accessorKey: "bookmarks",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Topics"
+        title="Bookmarks"
         className="text-cyan-50"
       />
     ),
     cell: ({ row }) => {
-      // Access the posts array from the row data
-      const topics = row.original.topics;
-
-      // Return the length of the posts array
-      return <div>{topics ? topics.length : 0}</div>;
-    },
-  },
-  {
-    accessorKey: "followedBy",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Followed by"
-        className="text-cyan-50"
-      />
-    ),
-    cell: ({ row }) => {
-      // Access the posts array from the row data
-      const followers = row.original.followedBy;
-
-      // Return the length of the posts array
-      return <div>{followers ? followers.length : 0}</div>;
+      const bookmarks = row.original.bookmarks;
+      return <div>{bookmarks ? bookmarks.length : 0}</div>;
     },
   },
   {
@@ -192,7 +205,8 @@ export const columns: ColumnDef<Category>[] = [
         className="text-cyan-50"
       />
     ),
-    cell: () => {
+    cell: ({ row }) => {
+      const postId = row.original.id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -215,9 +229,12 @@ export const columns: ColumnDef<Category>[] = [
             data-[state=closed]:slide-out-to-top-2
             "
           >
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/post/" + postId}>View</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/post/delete/" + postId}>Delete</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

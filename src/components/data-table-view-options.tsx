@@ -28,7 +28,7 @@ export function DataTableViewOptions<TData>({
           "
         >
           <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-          View
+          Columns
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

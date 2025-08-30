@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma=new PrismaClient();
 
+
 //to use this method across all topic methods
 const getCategory=async (options = {}) => {
   const {
@@ -112,6 +113,9 @@ const getTopic=async(options = {}) => {
     },
 });
 }
+
+
+
 
 export const showEditCategory=async(req,res)=>{
   const categoryId=req.params.id;

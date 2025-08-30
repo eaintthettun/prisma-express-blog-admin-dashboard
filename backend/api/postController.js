@@ -259,26 +259,18 @@ export const searchPosts=async(req,res)=>{
     });
 }
 
-// GET /posts?page=1&limit=10
-// Add pagination parameters
 export const listAllPosts = async (req, res) => {
-  const page = parseInt(req.query.page) || 1; // current page
-  const limit = parseInt(req.query.limit) || 10; // items per page
-  const skip = (page - 1) * limit;
-
   const posts = await prisma.post.findMany({
-    skip,
-    take: limit,
     orderBy: { createdAt: 'desc' },
     include: {
       author: true,
       category: true,
+      likes:true,
+      comments:true,
+      bookmarks:true,
     },
   });
-
-  const total = await prisma.post.count(); // total number of posts
-
-  res.json({ posts, total, page, totalPages: Math.ceil(total / limit) });
+  res.json(posts);
 };
 
 //sql query (select * from posts where authorId=req.session.userId)

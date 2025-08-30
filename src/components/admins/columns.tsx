@@ -1,4 +1,4 @@
-import type { Category } from "@/types/type";
+import type { Admin } from "@/types/type";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,9 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export const columns: ColumnDef<Category>[] = [
+export const columns: ColumnDef<Admin>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -36,7 +37,7 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id", //must match with type category id
+    accessorKey: "id",
     // header: "ID",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -57,11 +58,41 @@ export const columns: ColumnDef<Category>[] = [
     ),
   },
   {
-    accessorKey: "slug",
+    accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Slug"
+        title="Email"
+        className="text-cyan-50"
+      />
+    ),
+  },
+  {
+    accessorKey: "phoneNo",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Phone"
+        className="text-cyan-50"
+      />
+    ),
+  },
+  {
+    accessorKey: "role",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Role"
+        className="text-cyan-50"
+      />
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Status"
         className="text-cyan-50"
       />
     ),
@@ -76,7 +107,7 @@ export const columns: ColumnDef<Category>[] = [
       />
     ),
     cell: ({ row }) => {
-      const dateString = row.original.createdAt; // Access the date string from the row data
+      const dateString = row.original.createdAt;
 
       if (!dateString) {
         return <span>N/A</span>; // Handle cases where the date is missing
@@ -109,10 +140,9 @@ export const columns: ColumnDef<Category>[] = [
       />
     ),
     cell: ({ row }) => {
-      const dateString = row.original.updatedAt; // Access the date string from the row data
-
+      const dateString = row.original.updatedAt;
       if (!dateString) {
-        return <span>N/A</span>; // Handle cases where the date is missing
+        return <span>N/A</span>;
       }
 
       try {
@@ -133,57 +163,6 @@ export const columns: ColumnDef<Category>[] = [
     },
   },
   {
-    accessorKey: "posts",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Posts"
-        className="text-cyan-50"
-      />
-    ),
-    cell: ({ row }) => {
-      // Access the posts array from the row data
-      const posts = row.original.posts;
-
-      // Return the length of the posts array
-      return <div>{posts ? posts.length : 0}</div>;
-    },
-  },
-  {
-    accessorKey: "topics",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Topics"
-        className="text-cyan-50"
-      />
-    ),
-    cell: ({ row }) => {
-      // Access the posts array from the row data
-      const topics = row.original.topics;
-
-      // Return the length of the posts array
-      return <div>{topics ? topics.length : 0}</div>;
-    },
-  },
-  {
-    accessorKey: "followedBy",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Followed by"
-        className="text-cyan-50"
-      />
-    ),
-    cell: ({ row }) => {
-      // Access the posts array from the row data
-      const followers = row.original.followedBy;
-
-      // Return the length of the posts array
-      return <div>{followers ? followers.length : 0}</div>;
-    },
-  },
-  {
     id: "actions",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -192,7 +171,8 @@ export const columns: ColumnDef<Category>[] = [
         className="text-cyan-50"
       />
     ),
-    cell: () => {
+    cell: ({ row }) => {
+      const adminId = row.original.id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -215,9 +195,15 @@ export const columns: ColumnDef<Category>[] = [
             data-[state=closed]:slide-out-to-top-2
             "
           >
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/admin/" + adminId}>View</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/admin/edit/" + adminId}>Edit</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/admin/delete/" + adminId}>Delete</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

@@ -1,3 +1,20 @@
+export enum AdminStatus {
+  Active = "active",
+  Inactive = "inactive",
+}
+
+export type Admin = {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  phoneNo: string;
+  role: string;
+  status: AdminStatus; // Use the enum here
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Post = {
   id: number;
   title: string;
@@ -64,13 +81,13 @@ export type AuthorFollow = {
 export type Category = {
   id: number;
   name: string;
-  slug: string;
-  createdAt: Date;
-  updatedAt: Date;
+  slug?: string;
+  createdAt?: Date; //use ? to prevent error in create form
+  updatedAt?: Date;
 
-  posts: Post[];
-  topics: Topic[];
-  followedBy: CategoryFollow[]; //join table
+  posts?: Post[];
+  topics?: Topic[];
+  followedBy?: CategoryFollow[]; //join table
 };
 
 export type Topic = {

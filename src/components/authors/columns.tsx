@@ -1,4 +1,4 @@
-import type { Category } from "@/types/type";
+import type { Author } from "@/types/type";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,9 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export const columns: ColumnDef<Category>[] = [
+export const columns: ColumnDef<Author>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -36,7 +37,7 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id", //must match with type category id
+    accessorKey: "id",
     // header: "ID",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -57,87 +58,41 @@ export const columns: ColumnDef<Category>[] = [
     ),
   },
   {
-    accessorKey: "slug",
+    accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Slug"
+        title="Email"
         className="text-cyan-50"
       />
     ),
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "city",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Created at"
+        title="City"
         className="text-cyan-50"
       />
     ),
-    cell: ({ row }) => {
-      const dateString = row.original.createdAt; // Access the date string from the row data
-
-      if (!dateString) {
-        return <span>N/A</span>; // Handle cases where the date is missing
-      }
-
-      try {
-        const date = new Date(dateString);
-        // Use toLocaleString() for a readable date and time,
-        // or customize with options for specific formatting.
-        const formattedDate = date.toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
-        return <div>{formattedDate}</div>;
-      } catch (error) {
-        console.error("Invalid date format:", error, " ", dateString);
-        return <span>Invalid Date</span>;
-      }
-    },
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "country",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Updated at"
+        title="Country"
         className="text-cyan-50"
       />
     ),
-    cell: ({ row }) => {
-      const dateString = row.original.updatedAt; // Access the date string from the row data
-
-      if (!dateString) {
-        return <span>N/A</span>; // Handle cases where the date is missing
-      }
-
-      try {
-        const date = new Date(dateString);
-        // Use toLocaleString() for a readable date and time,
-        // or customize with options for specific formatting.
-        const formattedDate = date.toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
-        return <div>{formattedDate}</div>;
-      } catch (error) {
-        console.error("Invalid date format:", error, " ", dateString);
-        return <span>Invalid Date</span>;
-      }
-    },
   },
   {
     accessorKey: "posts",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Posts"
+        title="Total posts"
         className="text-cyan-50"
       />
     ),
@@ -150,34 +105,17 @@ export const columns: ColumnDef<Category>[] = [
     },
   },
   {
-    accessorKey: "topics",
+    accessorKey: "followers",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Topics"
+        title="Followers"
         className="text-cyan-50"
       />
     ),
     cell: ({ row }) => {
       // Access the posts array from the row data
-      const topics = row.original.topics;
-
-      // Return the length of the posts array
-      return <div>{topics ? topics.length : 0}</div>;
-    },
-  },
-  {
-    accessorKey: "followedBy",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Followed by"
-        className="text-cyan-50"
-      />
-    ),
-    cell: ({ row }) => {
-      // Access the posts array from the row data
-      const followers = row.original.followedBy;
+      const followers = row.original.followers;
 
       // Return the length of the posts array
       return <div>{followers ? followers.length : 0}</div>;
@@ -192,7 +130,8 @@ export const columns: ColumnDef<Category>[] = [
         className="text-cyan-50"
       />
     ),
-    cell: () => {
+    cell: ({ row }) => {
+      const authorId = row.original.id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -215,9 +154,12 @@ export const columns: ColumnDef<Category>[] = [
             data-[state=closed]:slide-out-to-top-2
             "
           >
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/author/" + authorId}>View</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/author/delete/" + authorId}>Delete</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

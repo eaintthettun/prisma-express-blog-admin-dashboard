@@ -9,6 +9,8 @@ import authRoutes from "./routes/authRoutes.js"
 import postRoutes from "./routes/postsRoutes.js"
 import topicRoutes from "./routes/topicRoutes.js"
 import commentRoutes from "./routes/commentRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js"
+import categoryRoutes from "./routes/categoryRoutes.js"
 
 dotenv.config();
 const prisma = new PrismaClient();
@@ -42,11 +44,20 @@ app.use('/auth',authRoutes);
 app.use('/posts',postRoutes); //only write posts when only login
 app.use('/comments',commentRoutes);
 app.use('/topics',topicRoutes);
+app.use('/admins',adminRoutes);
+app.use('/categories',categoryRoutes);
 
-app.get('/users',async(req,res)=>{
-  const users=await prisma.user.findMany();
-  res.json(users);
-})
+app.get('/authors',async(req,res)=>{
+  const authors=await prisma.user.findMany(
+    {
+      include:{
+        posts:true,
+        followers:true,
+      }
+    }
+  );
+  res.json(authors);
+});
 const PORT=process.env.PORT || 5800;
 app.listen(PORT,()=>console.log(`Server running on port http://localhost:${PORT}`));
 

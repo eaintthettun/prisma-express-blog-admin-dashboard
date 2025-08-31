@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
+import { error } from 'console';
 const prisma = new PrismaClient();
 
 function getFullName(firstName,lastName){
@@ -166,57 +167,72 @@ export const showRegister=async(_,res)=>{
     res.render('auth/register',{title:'Register',categories,layout:false}); //register.ejs(view)
 }
 
-export const register=async (req,res)=>{
-    const {name,email,password,profilePictureUrl,title,bio,githubUrl,twitterUrl,linkedinUrl}=req.body;
-    try{
-        //check user by email
-        const existingUser=await prisma.user.findUnique({
-            where:{email}
-        }); 
-        if(existingUser){
-            return res.status(400).render('auth/register',{
-                title:'Register',
-                error:'Email already in use',
-            });
-        }
-        //hash password
-        const hashedPassword=await bcrypt.hash(password,10);
-        //create new user
-        await prisma.user.create({
-            data:{name,email,password:hashedPassword,
-                profilePictureUrl,title,bio,githubUrl,twitterUrl,linkedinUrl
-            } //key:value object
-        });
-        res.redirect('/auth/login');    
-    }catch(error){
-        console.error('Error during registration:',error);
-        res.status(500).json({message:'Error registering user'});
-    }
-}
 export const showLogin=(req,res)=>{
     res.render('auth/login',{title:'Login',layout:false}); //view login form
 }
-export const login=async (req,res)=>{
-    const {email,password}=req.body;
-    const user=await prisma.user.findUnique({where:{email}});
-    if(!user){
-            return res.status(401).render(
-                'auth/login',{
-                    title:'Login',
-                    error:"Email not found",
-                }
-            );
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  // 1. Find the admin by email
+  const admin = await prisma.admin.findFirst({ where: { email } });
+
+  // 2. Guard clause: Return immediately if the email is not found
+  if (!admin) {
+    return res.status(401).json({
+      error: "Email not found"
+    });
+  }
+
+  // 3. Guard clause: Return immediately if the password is incorrect
+  const passwordMatch = await bcrypt.compare(password, admin.password);
+  console.log('Is password match?',passwordMatch)
+  if (!passwordMatch) {
+    return res.status(401).json({
+      error: "Password is incorrect"
+    });
+  }
+  return res.json(admin);
+};
+
+export const register = async (req, res) => {
+    const { name,email,password,phoneNo,role,status } = req.body;
+
+    //to prevent duplicate email
+    const existingAdmin=await prisma.admin.findFirst({
+        where:{email}
+    })
+    
+    if(existingAdmin){
+        return res.status(409).json({
+            error: "This email is already registered."
+        }); 
     }
-    //email correct,also check user
-    //login success
-    if(user && await bcrypt.compare(password,user.password)){
-        console.log('login success',user,password);
-        req.session.userId=user.id;
-        req.session.role="Super Admin";
-        return res.redirect('/');
+
+    // 1. Hash the password before saving it
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
+    try {
+        // 2. Save the admin with the HASHED password
+        const admin = await prisma.admin.create({
+            data: {
+                name,
+                email,
+                password: hashedPassword, // Store the hashed password
+                phoneNo,
+                role,
+                status
+            },
+        });
+        
+        return res.status(201).json(admin);
+    } catch (error) {
+       console.error("Prisma create error:", error);
+        return res.status(400).json({ error: 'Failed to create admin.' });
     }
-    res.redirect('/auth/login');
-}
+};
+
 
 export const logout=async(req,res)=>{
   req.session.destroy();

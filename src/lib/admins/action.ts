@@ -42,3 +42,15 @@ export async function deleteAdmin(id:string) {
         return {success:false,error: errorData.message || 'An error occurred while deleting admin'}
     }
 }
+
+export async function loginAdmin(admin:Omit<Admin,'id'>) {
+  const res = await fetch("http://localhost:5000/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(admin),
+  });
+
+  return res;
+}

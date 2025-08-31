@@ -8,21 +8,21 @@ import SettingsPage from "./components/SettingsPage";
 import AuthorsPage from "./components/authors/AuthorsPage";
 import AdminsPage from "./components/admins/AdminsPage";
 import CreateCategoryForm from "./components/categories/create-category-form";
+import LoginPage from "./pages/LoginPage";
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LoginPage />} />
       <Route element={<DashboardLayout />}>
-        {/* The HomePage component is now correctly nested inside a new Route */}
-        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/authors" element={<AuthorsPage />} />
         <Route path="/posts" element={<AllPostsPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="/categories/add" element={<CreateCategoryForm />} />
         <Route path="/inbox" element={<InboxPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/admins" element={<AdminsPage />} />
-
-        <Route path="/categories/add" element={<CreateCategoryForm />} />
       </Route>
     </Routes>
   );

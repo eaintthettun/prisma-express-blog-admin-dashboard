@@ -5,14 +5,14 @@ export enum AdminStatus {
 
 export type Admin = {
   id: number;
-  name: string;
+  name?: string; //use to prevent error in admin login form
   email: string;
   password: string;
-  phoneNo: string;
-  role: string;
-  status: AdminStatus; // Use the enum here
-  createdAt: Date;
-  updatedAt: Date;
+  phoneNo?: string;
+  role?: string;
+  status?: AdminStatus; // Use the enum here
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type Post = {

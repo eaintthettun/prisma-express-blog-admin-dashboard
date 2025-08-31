@@ -27,7 +27,7 @@ import { NavAdmin } from "./nav-admin";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/home",
     icon: LucideLayoutDashboard,
   },
   {
@@ -78,7 +78,7 @@ export default function AppSidebar() {
     <Sidebar variant="inset" className="border-r border-slate-200 bg-white ">
       <SidebarHeader className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
         <div className="flex items-center gap-3 px-6 py-4">
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/home" className="flex items-center gap-3 group">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white transition-colors group-hover:bg-slate-800">
               <NotepadTextIcon className="h-5 w-5" />
             </div>

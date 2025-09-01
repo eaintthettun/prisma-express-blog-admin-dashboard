@@ -24,18 +24,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAdminContext } from "@/context/AdminContext";
 
-export function NavAdmin({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+export function NavAdmin() {
   const { isMobile } = useSidebar();
+  const { authenticatedAdmin } = useAdminContext(); //custom hook
 
+  console.log("Authenticated Admin in NavAdmin component:", authenticatedAdmin);
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -46,13 +41,18 @@ export function NavAdmin({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage
+                  src="/images/default_avatar.png"
+                  alt={authenticatedAdmin?.name}
+                />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium">
+                  {authenticatedAdmin?.name}
+                </span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
+                  {authenticatedAdmin?.email}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
@@ -68,13 +68,18 @@ export function NavAdmin({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage
+                    src={"/images/default_avatar.jpg"}
+                    alt={authenticatedAdmin?.name}
+                  />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">
+                    {authenticatedAdmin?.name}
+                  </span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user.email}
+                    {authenticatedAdmin?.email}
                   </span>
                 </div>
               </div>

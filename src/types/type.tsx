@@ -1,3 +1,10 @@
+export enum AdminRole {
+  SUPER_ADMIN = "super_admin",
+  ADMIN = "admin",
+  EDITOR = "editor",
+  VIEWER = "viewer",
+}
+
 export enum AdminStatus {
   Active = "active",
   Inactive = "inactive",
@@ -9,7 +16,7 @@ export type Admin = {
   email: string;
   password: string;
   phoneNo?: string;
-  role?: string;
+  role?: AdminRole;
   status?: AdminStatus; // Use the enum here
   createdAt?: Date;
   updatedAt?: Date;

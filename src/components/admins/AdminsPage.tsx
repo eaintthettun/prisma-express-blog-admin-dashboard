@@ -18,10 +18,6 @@ export default function AdminsPage() {
 
     fetchAdmins();
   }, []);
-
-  {
-    console.log("api response data from admins page:", admins);
-  }
   return (
     <div className="container mx-auto">
       <div>

@@ -3,7 +3,6 @@ const prisma=new PrismaClient();
 import slugify from 'slugify';
 
 export const createCategory = async (req, res) => {
-  console.log('Attempting to create a category...');
   const { name } = req.body;
 
   const options = {

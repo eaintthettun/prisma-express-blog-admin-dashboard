@@ -66,13 +66,6 @@ const adminItems = [
   },
 ];
 
-const adminProfile = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  avatar: "/avatars/01.png", // Replace with a real avatar URL
-  initials: "JD",
-};
-
 export default function AppSidebar() {
   return (
     <Sidebar variant="inset" className="border-r border-slate-200 bg-white ">
@@ -132,13 +125,13 @@ export default function AppSidebar() {
               {adminItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="group">
-                    <a
-                      href={item.url}
+                    <Link
+                      to={item.url}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-white transition-all duration-200 font-medium"
                     >
                       <item.icon className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -148,7 +141,7 @@ export default function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-slate-200 bg-white/80 backdrop-blur-sm p-4">
-        <NavAdmin user={adminProfile} />
+        <NavAdmin />
       </SidebarFooter>
     </Sidebar>
   );

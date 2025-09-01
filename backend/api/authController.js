@@ -186,7 +186,6 @@ export const login = async (req, res) => {
 
   // 3. Guard clause: Return immediately if the password is incorrect
   const passwordMatch = await bcrypt.compare(password, admin.password);
-  console.log('Is password match?',passwordMatch)
   if (!passwordMatch) {
     return res.status(401).json({
       error: "Password is incorrect"

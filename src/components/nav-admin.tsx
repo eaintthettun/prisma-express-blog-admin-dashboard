@@ -25,12 +25,17 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useAdminContext } from "@/context/AdminContext";
+import { useNavigate } from "react-router-dom";
 
 export function NavAdmin() {
   const { isMobile } = useSidebar();
-  const { authenticatedAdmin } = useAdminContext(); //custom hook
+  const { authenticatedAdmin, logout } = useAdminContext(); //custom hook
+  const navigate = useNavigate();
 
-  console.log("Authenticated Admin in NavAdmin component:", authenticatedAdmin);
+  const handleLogout = () => {
+    logout(); // Clear the state and localStorage
+    navigate("/"); // Redirect to the login page
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -100,7 +105,7 @@ export function NavAdmin() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

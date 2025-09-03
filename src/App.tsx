@@ -10,21 +10,26 @@ import AdminsPage from "./components/admins/AdminsPage";
 import CreateCategoryForm from "./components/categories/create-category-form";
 import LoginPage from "./pages/LoginPage";
 import { AdminProvider } from "./context/AdminProvider";
+import { PrivateRoute } from "./components/auth/PrivateRoute";
 
 export default function App() {
   return (
     <AdminProvider>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route element={<DashboardLayout />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/authors" element={<AuthorsPage />} />
-          <Route path="/posts" element={<AllPostsPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/categories/add" element={<CreateCategoryForm />} />
-          <Route path="/inbox" element={<InboxPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/admins" element={<AdminsPage />} />
+        {/* Private route restrict admin accessing pages
+        if the admin is not logged in */}
+        <Route element={<PrivateRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/authors" element={<AuthorsPage />} />
+            <Route path="/posts" element={<AllPostsPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/categories/add" element={<CreateCategoryForm />} />
+            <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/admins" element={<AdminsPage />} />
+          </Route>
         </Route>
       </Routes>
     </AdminProvider>

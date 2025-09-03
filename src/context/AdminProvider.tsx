@@ -13,11 +13,13 @@ export const AdminProvider = ({ children }: AdminProviderProps) => {
     null
   );
 
-  console.log("authenticated admin in admin provider:", authenticatedAdmin);
-
   // Use useEffect to load data from localStorage on initial render.
   // This ensures the user's state is preserved after a page refresh.
   useEffect(() => {
+    console.log(
+      "use effect triggered:",
+      localStorage.getItem("authenticatedAdmin")
+    );
     try {
       const storedAdmin = localStorage.getItem("authenticatedAdmin");
       if (storedAdmin) {
@@ -30,9 +32,15 @@ export const AdminProvider = ({ children }: AdminProviderProps) => {
     }
   }, []); // The empty dependency array ensures this effect runs only once when the component mounts.
 
+  const logout = () => {
+    setAuthenticatedAdmin(null); // Clear the state in the context
+    localStorage.removeItem("authenticatedAdmin"); // Clear the data from localStorage
+  };
+
   const value = {
     authenticatedAdmin,
     setAuthenticatedAdmin,
+    logout,
   };
 
   return (

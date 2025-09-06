@@ -1,45 +1,43 @@
 import { Admin } from "@/types/type";
 import React, { useState, ReactNode, useEffect } from "react";
 import { AdminContext } from "./AdminContext";
-
+import { jwtDecode } from "jwt-decode";
 interface AdminProviderProps {
   children: ReactNode;
 }
 
 // Create the provider that will hold and manage the state.
 export const AdminProvider = ({ children }: AdminProviderProps) => {
-  //console.log("hello admin provider");
   const [authenticatedAdmin, setAuthenticatedAdmin] = useState<Admin | null>(
     null
   );
+  const [token, setToken] = useState<string | null>(null);
 
-  // Use useEffect to load data from localStorage on initial render.
-  // This ensures the user's state is preserved after a page refresh.
+  //to protect null value on page refresh,reassign token again
   useEffect(() => {
-    console.log(
-      "use effect triggered:",
-      localStorage.getItem("authenticatedAdmin")
-    );
-    try {
-      const storedAdmin = localStorage.getItem("authenticatedAdmin");
-      if (storedAdmin) {
-        setAuthenticatedAdmin(JSON.parse(storedAdmin));
+    const token = localStorage.getItem("token");
+    if (token) {
+      setToken(token);
+      try {
+        const decoded: Admin = jwtDecode(token);
+        setAuthenticatedAdmin(decoded);
+      } catch {
+        setAuthenticatedAdmin(null);
       }
-    } catch (error) {
-      console.error("Failed to parse admin data from localStorage:", error);
-      // Optional: Clear corrupted data from localStorage to prevent repeated errors.
-      localStorage.removeItem("authenticatedAdmin");
     }
-  }, []); // The empty dependency array ensures this effect runs only once when the component mounts.
+  }, [token]);
 
   const logout = () => {
-    setAuthenticatedAdmin(null); // Clear the state in the context
-    localStorage.removeItem("authenticatedAdmin"); // Clear the data from localStorage
+    localStorage.removeItem("token");
+    setToken(null);
+    setAuthenticatedAdmin(null);
   };
 
   const value = {
     authenticatedAdmin,
     setAuthenticatedAdmin,
+    token,
+    setToken,
     logout,
   };
 

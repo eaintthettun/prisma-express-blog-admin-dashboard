@@ -1,22 +1,18 @@
-export default (req, res, next) => {
-    //console.log('🔐 Auth middleware is running');
-    if (!req.session.userId) {
-      //console.log('❌ Not logged in - responding with 401');
-      const acceptsJson = req.headers.accept && req.headers.accept.includes('application/json');
-      const isAjax = req.xhr || acceptsJson;
-  
-      if (isAjax) {
-        return res.status(401).json({ 
-          error: 'You must be logged in to follow topics.', 
-          loginUrl: '/auth/login' 
-        });
-      }
-  
-      // Optional fallback if not AJAX
-      return res.redirect('/auth/login');
-    }
-  
-    console.log('✅ User is authenticated');
+import jwt from 'jsonwebtoken';
+
+// Middleware to protect routes
+export default function authMiddleware(req, res, next) {
+  const SECRET=process.env.JWT_SECRET;
+  const authHeader = req.headers["authorization"];
+  //console.log('authHeader:',authHeader);
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return res.sendStatus(401); //unauthorized
+
+
+ //authorized but deny to access requested source
+  jwt.verify(token, SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
     next();
-  };
-  
+  });
+}

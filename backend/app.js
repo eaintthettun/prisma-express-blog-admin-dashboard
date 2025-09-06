@@ -25,19 +25,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use(
-  session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: new PrismaSessionStore(prisma, {
-      ttl: 14 * 24 * 60 * 60, // 14 days
-    }),
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 14,
-    },
-  })
-);
 
 //api routes
 app.use('/auth',authRoutes);

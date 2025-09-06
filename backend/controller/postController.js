@@ -259,7 +259,7 @@ export const searchPosts=async(req,res)=>{
     });
 }
 
-export const listAllPosts = async (req, res) => {
+export const listPosts = async (req, res) => {
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: 'desc' },
     include: {

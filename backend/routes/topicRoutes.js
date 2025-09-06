@@ -1,5 +1,5 @@
 import express from 'express';
-import * as topicController from '../api/topicController.js'; //topicController.js likely has multiple named exports.
+import * as topicController from '../controller/topicController.js'; //topicController.js likely has multiple named exports.
 import auth from '../middleware/authMiddleware.js';
 
 

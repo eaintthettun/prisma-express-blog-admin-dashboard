@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
-import { error } from 'console';
+import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 function getFullName(firstName,lastName){
@@ -161,37 +161,37 @@ export const showProfile=async (req,res)=>{
     });
 }
 
-export const showRegister=async(_,res)=>{
-    const categories=await prisma.category.findMany({
-    });
-    res.render('auth/register',{title:'Register',categories,layout:false}); //register.ejs(view)
-}
-
-export const showLogin=(req,res)=>{
-    res.render('auth/login',{title:'Login',layout:false}); //view login form
-}
-
+//this login method generates json web token by accepting email & password
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  const SECRET=process.env.JWT_SECRET;
 
-  // 1. Find the admin by email
-  const admin = await prisma.admin.findFirst({ where: { email } });
+  const adminUser=await prisma.admin.findFirst({
+    where:{email}
+  })
 
-  // 2. Guard clause: Return immediately if the email is not found
-  if (!admin) {
-    return res.status(401).json({
-      error: "Email not found"
-    });
+  if (email !== adminUser.email) return res.status(400).json({ error: "Invalid credentials" });
+
+  const isMatch = await bcrypt.compare(password, adminUser.password);
+  if (!isMatch) return res.status(400).json({ error: "Password incorrect" });
+
+
+
+  // Generate token
+  const token = jwt.sign(
+    {
+    id: adminUser.id,
+    name:adminUser.name,
+    email: adminUser.email,
+    role: adminUser.role,
+    phoneNo:adminUser.phoneNo,
+    status:adminUser.status,
+    createdAt:adminUser.createdAt,
+    updatedAt:adminUser.updatedAt,
   }
+    , SECRET, { expiresIn: "1h" });
 
-  // 3. Guard clause: Return immediately if the password is incorrect
-  const passwordMatch = await bcrypt.compare(password, admin.password);
-  if (!passwordMatch) {
-    return res.status(401).json({
-      error: "Password is incorrect"
-    });
-  }
-  return res.json(admin);
+  res.json({ token });
 };
 
 export const register = async (req, res) => {
@@ -231,9 +231,3 @@ export const register = async (req, res) => {
         return res.status(400).json({ error: 'Failed to create admin.' });
     }
 };
-
-
-export const logout=async(req,res)=>{
-  req.session.destroy();
-  res.redirect('/');
-}

@@ -1,5 +1,5 @@
 import express from 'express';
-import * as commentController from '../api/commentController.js'; //commentController.js likely has multiple named exports.
+import * as commentController from '../controller/commentController.js'; //commentController.js likely has multiple named exports.
 import auth from '../middleware/authMiddleware.js';
 
 const router=express.Router();

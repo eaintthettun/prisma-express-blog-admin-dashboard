@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { setAuthenticatedAdmin } = useAdminContext(); //call custom hook and subscribe AdminContext
+  const { setToken } = useAdminContext(); //call custom hook and subscribe AdminContext
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword); //true
@@ -29,17 +29,19 @@ export default function LoginPage() {
       const res = await loginAdmin(admin);
       const data = await res.json();
 
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+      }
+
       //if email not found,show error on UI
       if (!res.ok) {
         setError(data.error);
       } else {
-        // 1. Set the admin data in the context
-        setAuthenticatedAdmin(data);
-
-        // 2. Save the admin data to localStorage for persistence
-        localStorage.setItem("authenticatedAdmin", JSON.stringify(data));
-
-        // 3. Now that state is updated, navigate to the dashboard
+        console.log(
+          "login sucess:go to home page,token:",
+          localStorage.getItem("token")
+        );
         navigate("/home");
       }
     } catch (err) {

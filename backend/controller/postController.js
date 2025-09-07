@@ -260,17 +260,22 @@ export const searchPosts=async(req,res)=>{
 }
 
 export const listPosts = async (req, res) => {
-  const posts = await prisma.post.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      author: true,
-      category: true,
-      likes:true,
-      comments:true,
-      bookmarks:true,
-    },
-  });
-  res.json(posts);
+  try{
+    const posts = await prisma.post.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: {
+        author: true,
+        category: true,
+        likes:true,
+        comments:true,
+        bookmarks:true,
+        },
+    });
+    return res.json(posts);
+  }catch(error){
+        console.error('Failed to fetch posts:',error);
+        res.status(500).json({ error: 'Failed to get posts due to an unexpected error.' })
+  }
 };
 
 //sql query (select * from posts where authorId=req.session.userId)

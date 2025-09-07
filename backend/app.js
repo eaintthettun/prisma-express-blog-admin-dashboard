@@ -11,6 +11,7 @@ import topicRoutes from "./routes/topicRoutes.js"
 import commentRoutes from "./routes/commentRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import categoryRoutes from "./routes/categoryRoutes.js"
+import authorRoutes from "./routes/authorRoutes.js"
 
 dotenv.config();
 const prisma = new PrismaClient();
@@ -33,21 +34,8 @@ app.use('/comments',commentRoutes);
 app.use('/topics',topicRoutes);
 app.use('/admins',adminRoutes);
 app.use('/categories',categoryRoutes);
+app.use('/authors',authorRoutes);
 
-app.get('/authors',async(req,res)=>{
-  const authors=await prisma.user.findMany(
-    {
-      include:{
-        posts:true,
-        followers:true,
-      },
-      orderBy:{
-        createdAt:'desc'
-      }
-    }
-  );
-  res.json(authors);
-});
 const PORT=process.env.PORT || 5800;
 app.listen(PORT,()=>console.log(`Server running on port http://localhost:${PORT}`));
 

@@ -1,3 +1,4 @@
+import { useAdminContext } from "@/context/AdminContext";
 import { createCategory } from "@/lib/categories/action";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,7 @@ export default function CreateCategoryForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { token } = useAdminContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // CRITICAL: Prevent the default browser form submission
@@ -31,7 +33,7 @@ export default function CreateCategoryForm() {
 
     try {
       // Call your API function and pass the data to it
-      const res = await createCategory(newCategory); //return res to handle error
+      const res = await createCategory(newCategory, token); //return res to handle error
 
       const data = await res.json();
       //for 409 error(category name already exists error)

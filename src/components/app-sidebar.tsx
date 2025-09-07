@@ -14,7 +14,6 @@ import {
   FileText,
   Inbox,
   LucideLayoutDashboard,
-  NotepadTextIcon,
   Settings,
   Tag,
   Users,
@@ -68,12 +67,12 @@ const adminItems = [
 
 export default function AppSidebar() {
   return (
-    <Sidebar variant="inset" className="border-r border-slate-200 bg-white ">
+    <Sidebar variant="inset" className=" border-r border-slate-200 bg-white">
       <SidebarHeader className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
         <div className="flex items-center gap-3 px-6 py-4">
           <Link to="/home" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white transition-colors group-hover:bg-slate-800">
-              <NotepadTextIcon className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg text-white">
+              <img src="./blog.svg" alt="blog icon" />
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-semibold text-slate-900 tracking-tight">
@@ -87,7 +86,7 @@ export default function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-4 py-6">
+      <SidebarContent className="px-4 py-6 scroller">
         <SidebarGroup className="mb-8">
           <SidebarGroupLabel className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
             Content Management
@@ -97,9 +96,12 @@ export default function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="group">
-                    <a
-                      href={item.url}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-white transition-all duration-200 font-medium"
+                    <Link
+                      to={item.url}
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg 
+                    text-slate-700 hover:text-slate-900 hover:bg-blue-100 
+                    focus:bg-blue-100 focus:ring-2 focus:ring-blue-300 
+                    font-medium transform hover:-translate-x-1 transition-transform duration-200"
                     >
                       <item.icon className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
                       <span>{item.title}</span>
@@ -108,7 +110,7 @@ export default function AppSidebar() {
                           {item.badge}
                         </span>
                       )}
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -127,7 +129,10 @@ export default function AppSidebar() {
                   <SidebarMenuButton asChild className="group">
                     <Link
                       to={item.url}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-white transition-all duration-200 font-medium"
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg 
+                     text-slate-700 hover:text-slate-900 hover:bg-blue-100 
+                     focus:bg-blue-100 focus:ring-2 focus:ring-blue-300 
+                     font-medium transform hover:-translate-x-1 transition-transform duration-200"
                     >
                       <item.icon className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
                       <span>{item.title}</span>

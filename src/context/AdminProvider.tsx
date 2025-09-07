@@ -12,12 +12,14 @@ export const AdminProvider = ({ children }: AdminProviderProps) => {
     null
   );
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   //to protect null value on page refresh,reassign token again
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setToken(token);
+      setLoading(false);
       try {
         const decoded: Admin = jwtDecode(token);
         setAuthenticatedAdmin(decoded);
@@ -25,6 +27,7 @@ export const AdminProvider = ({ children }: AdminProviderProps) => {
         setAuthenticatedAdmin(null);
       }
     }
+    setLoading(false);
   }, [token]);
 
   const logout = () => {
@@ -39,7 +42,10 @@ export const AdminProvider = ({ children }: AdminProviderProps) => {
     token,
     setToken,
     logout,
+    loading,
   };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <AdminContext.Provider value={value}>{children}</AdminContext.Provider>

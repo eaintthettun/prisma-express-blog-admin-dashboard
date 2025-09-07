@@ -4,7 +4,6 @@ import slugify from 'slugify';
 
 export const createCategory = async (req, res) => {
   const { name } = req.body;
-
   const options = {
     lower: true,
     strict: true
@@ -43,7 +42,8 @@ export const createCategory = async (req, res) => {
 };
 
 export const listCategories=async(req,res)=>{
-    const categories=await prisma.category.findMany({ //get both categories and topics
+    try{
+      const categories=await prisma.category.findMany({ //get both categories and topics
         include:{
             topics:{
                 select:{
@@ -58,6 +58,10 @@ export const listCategories=async(req,res)=>{
         orderBy:{
             createdAt:'desc'
         }
-    });
-    res.json(categories);
+        });
+        res.json(categories);
+    }catch(error){
+      console.error('Failed to get categories:', error);
+      res.status(500).json({ error: 'Failed to get categories due to an unexpected error.' });
+    }
 }

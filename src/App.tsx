@@ -17,17 +17,16 @@ export default function App() {
     <AdminProvider>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route element={<DashboardLayout />}>
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/home" element={<HomePage />} />
           <Route path="/authors" element={<AuthorsPage />} />
-          <Route
-            path="/posts"
-            element={
-              <ProtectedRoute>
-                <AllPostsPage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/posts" element={<AllPostsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/categories/add" element={<CreateCategoryForm />} />
           <Route path="/inbox" element={<InboxPage />} />

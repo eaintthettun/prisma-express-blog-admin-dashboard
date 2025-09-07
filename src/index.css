@@ -33,3 +33,12 @@
 
   --radius: 0.5rem;
 }
+
+.dropdown-item {
+  @apply text-slate-700 hover:text-slate-900 hover:bg-blue-100  
+        duration-200 font-medium transition-all;
+}
+
+.scroller {
+  scrollbar-color: rgb(160, 222, 226) white;
+}

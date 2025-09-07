@@ -8,15 +8,15 @@ import { Outlet } from "react-router-dom";
 
 export default function DashboardLayout() {
   return (
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <main>
-            <SidebarTrigger />
-            {/* This is where the content of your child routes (e.g., HomePage) will be rendered. */}
-            <Outlet />
-          </main>
-        </SidebarInset>
-      </SidebarProvider>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <main>
+          <SidebarTrigger />
+          {/* This is where the content of your child routes (e.g., HomePage) will be rendered. */}
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

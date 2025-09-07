@@ -3,28 +3,44 @@ import type { Category } from "@/types/type";
 import { columns } from "@/components/categories/columns";
 import { DataTable } from "@/components/data-table";
 import { getCategories } from "@/lib/categories/api";
+import { useAdminContext } from "@/context/AdminContext";
+import { useNavigate } from "react-router-dom";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const { token, logout } = useAdminContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Define an async function inside the useEffect hook
     const fetchCategories = async () => {
       try {
-        const data = await getCategories();
+        const res = await getCategories(token);
+
+        if (!res.ok) {
+          if (res.status === 403) {
+            // handle expired token
+            logout();
+            navigate("/");
+            return;
+          }
+          // other HTTP errors
+          throw new Error(`Server error: ${res.status} ${res.statusText}`);
+        }
+        const data = await res.json();
         setCategories(data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
-        setError(String(err));
+        setError(err instanceof Error ? err.message : "Unknown error occurred");
       } finally {
         setLoading(false);
       }
     };
 
     fetchCategories();
-  }, []);
+  }, [token, logout, navigate]);
 
   if (loading) {
     return (

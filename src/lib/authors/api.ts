@@ -1,6 +1,6 @@
-export async function getPosts(token:string | null):Promise<Response> {
+export async function getAuthors(token:string | null):Promise<Response> { 
         try {
-            const res = await fetch("http://localhost:5000/posts", {
+            const res = await fetch("http://localhost:5000/authors", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

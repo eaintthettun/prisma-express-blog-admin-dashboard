@@ -1,19 +1,18 @@
 //all admins
-export async function getAdmins() { 
+export async function getAdmins(token:string | null):Promise<Response> { 
         try
         {
-            const res=await fetch("http://localhost:5000/admins");
+            const res=await fetch("http://localhost:5000/admins",{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-            if(!res.ok){
-                throw new Error(`Failed to fetch admins: ${res.status}`);
-            }
-
-            const data=await res.json();
-            return data;
-
+            return res;
         }catch(error){
-            console.error('Error fetching admins:',error);
-            return [];
+            // Network error → backend is likely down
+            console.error("Cannot connect to the server. Please try again later.",error);
+            throw new Error("Cannot connect to the server. Please try again later.");
         }
 }
 

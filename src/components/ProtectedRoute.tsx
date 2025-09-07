@@ -8,12 +8,13 @@ export default function ProtectedRoute({
 }: {
   children: React.ReactNode;
 }) {
-  const { token } = useAdminContext();
+  const { token, loading } = useAdminContext();
 
+  if (loading) return <div>Loading...</div>;
   if (!token) {
     // Not logged in → go to login page
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return <>{children}</>;
 }

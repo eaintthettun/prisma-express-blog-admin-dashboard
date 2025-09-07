@@ -11,7 +11,10 @@ export default function authMiddleware(req, res, next) {
 
  //authorized but deny to access requested source
   jwt.verify(token, SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) {
+      //console.error("JWT error:", err.message)
+      return res.sendStatus(403)
+    };
     req.user = user;
     next();
   });

@@ -8,6 +8,7 @@ interface AdminContextType {
   logout: () => void;
   token: string | null;
   setToken: (token: string | null) => void;
+  loading: boolean;
 }
 
 // Step 1: Create  AdminContext container with a default value of `null`.

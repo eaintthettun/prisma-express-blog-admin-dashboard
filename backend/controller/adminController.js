@@ -11,6 +11,7 @@ export const listAdmins=async(req,res)=>{
         res.json(admins);
     }catch(error){
         console.error('Failed to fetch admins:',error);
+        res.status(500).json({ error: 'Failed to get admins due to an unexpected error.' })
     }
 }
 

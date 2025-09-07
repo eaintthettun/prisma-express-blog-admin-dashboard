@@ -9,6 +9,8 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+import DeleteCategoryButton from "./DeleteCategoryButton";
 
 export const columns: ColumnDef<Category>[] = [
   {
@@ -168,7 +170,7 @@ export const columns: ColumnDef<Category>[] = [
         className="text-cyan-50"
       />
     ),
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -191,9 +193,15 @@ export const columns: ColumnDef<Category>[] = [
             data-[state=closed]:slide-out-to-top-2
             "
           >
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/categories/" + row.original.id}>View</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={"/categories/edit/" + row.original.id}>Edit</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <DeleteCategoryButton id={row.original.id.toString()} />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

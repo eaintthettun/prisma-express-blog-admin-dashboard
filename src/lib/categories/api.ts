@@ -14,17 +14,17 @@ export async function getCategories(token:string | null):Promise<Response> {
         }
 }
 
-export async function getCategoryById(id:string) {
+export async function getCategoryById(id:string | undefined,token:string | null):Promise<Response> {
     try{
-        const res=await fetch("http://localhost:5000/categories/"+id);
-
-        if(!res.ok){
-            throw new Error('Failed to fetch category')
-        }
-        const data=await res.json();
-        return data;
+        const res=await fetch("http://localhost:5000/categories/"+id,{
+            method:"POST",
+            headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        });
+        return res;
     }catch(error){
-        console.error('Error fetching category:',error);
-        return null;
+       console.error("Cannot connect to the server. Please try again later.",error);
+       throw new Error("Cannot connect to the server. Please try again later.");
     }
 }

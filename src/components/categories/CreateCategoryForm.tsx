@@ -12,7 +12,7 @@ export default function CreateCategoryForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { token } = useAdminContext();
+  const { token, logout } = useAdminContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // CRITICAL: Prevent the default browser form submission
@@ -35,16 +35,26 @@ export default function CreateCategoryForm() {
       // Call your API function and pass the data to it
       const res = await createCategory(newCategory, token); //return res to handle error
 
-      const data = await res.json();
-      //for 409 error(category name already exists error)
+      //409 error=category already exists
       if (!res.ok) {
-        setError(data.error);
+        if (res.status === 403) {
+          // handle expired token
+          logout();
+          navigate("/");
+          return;
+        }
+        if (res.status === 409) {
+          throw new Error("Category name already exists");
+        }
+        // other HTTP errors
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
       } else {
-        console.log("category created:", data);
+        alert("Category created successfully!");
         navigate("/categories");
       }
     } catch (err) {
       console.error("Failed to create category:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
       setLoading(false);
     }

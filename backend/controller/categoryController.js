@@ -33,11 +33,11 @@ export const createCategory = async (req, res) => {
         slug: slugify(name, options)
       }
     });
-    res.json(createdCategory);
+    return res.json(createdCategory);
 
   } catch (error) {
     console.error('Failed to create category:', error);
-    res.status(500).json({ error: 'Failed to create category due to an unexpected error.' });
+    return res.status(500).json({ error: 'Failed to create category due to an unexpected error.' });
   }
 };
 
@@ -64,4 +64,54 @@ export const listCategories=async(req,res)=>{
       console.error('Failed to get categories:', error);
       res.status(500).json({ error: 'Failed to get categories due to an unexpected error.' });
     }
+}
+
+export const deleteCategory=async (req,res)=>{
+  const categoryId=parseInt(req.params.id);
+  try{    
+    await prisma.category.delete({
+      where:{id:categoryId}
+    });
+
+    return res.json({id:categoryId});
+  }catch(error){
+    console.error('Failed to delete category:', error);
+    return res.status(500).json({ error: 'Failed to delete category due to an unexpected error.' });
+  }
+}
+
+export const viewCategory=async(req,res)=>{
+  const categoryId=parseInt(req.params.id);
+   try{
+     const category=await prisma.category.findUnique({
+      where:{id:categoryId},
+      include:{
+        posts:{
+          orderBy:{
+            viewCount:'desc'
+          },
+          select:{
+            title:true,
+            author:true,
+            createdAt:true,
+            viewCount:true,
+            likes:true,
+            comments:true,
+          }
+        },
+        topics:{
+          select:{
+            name:true,
+            posts:true,
+            followedBy:true
+          }
+        },
+        followedBy:true
+      }
+     });
+     res.json(category);
+   }catch(error){
+    console.error('Failed to get category:', error);
+    return res.status(500).json({ error: 'Failed to get category due to an unexpected error.' });
+  }
 }

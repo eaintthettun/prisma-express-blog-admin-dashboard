@@ -7,10 +7,12 @@ import InboxPage from "./components/InboxPage";
 import SettingsPage from "./components/SettingsPage";
 import AuthorsPage from "./components/authors/AuthorsPage";
 import AdminsPage from "./components/admins/AdminsPage";
-import CreateCategoryForm from "./components/categories/create-category-form";
+import CreateCategoryForm from "./components/categories/CreateCategoryForm";
 import LoginPage from "./pages/LoginPage";
 import { AdminProvider } from "./context/AdminProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ViewCategory from "./components/categories/ViewCategory";
+import EditCategory from "./components/categories/EditCategory";
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
           <Route path="/posts" element={<AllPostsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/categories/add" element={<CreateCategoryForm />} />
+          <Route path="/categories/:id" element={<ViewCategory />} />
+          <Route path="/categories/edit/:id" element={<EditCategory />} />
           <Route path="/inbox" element={<InboxPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/admins" element={<AdminsPage />} />
